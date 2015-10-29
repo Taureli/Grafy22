@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Main {
 	static ArrayList<ArrayList<?>> matrix = new ArrayList<ArrayList<?>>();
 	static ArrayList<Integer> center = new ArrayList<>();
+	static ArrayList<Integer> allVert = new ArrayList<>();
 	static int radius;
 
 	public static void main(String args[]) throws Exception {
@@ -27,7 +28,13 @@ public class Main {
 				break;
 			case(2):
 				center.clear();
-				radius = findCenterV1(matrix, new ArrayList<Integer>(), matrix.size());
+				allVert.clear();
+				//Spisujê wszystkie wierzcho³ki na potrzeby listy pomocniczej
+				for(int i = 0; i < matrix.size(); i++){
+					allVert.add(i);
+				}
+				
+				radius = findCenterV1(matrix, new ArrayList<Integer>(), allVert);
 				System.out.print("Centrum drzewa: ");
 				
 				for(int i = 0; i < center.size(); i++){
@@ -82,12 +89,12 @@ public class Main {
 	
 	//Szukanie centrum
 	@SuppressWarnings("unchecked")
-	public static int findCenterV1(ArrayList<ArrayList<?>> tree, ArrayList<Integer> leaves, int size){
+	public static int findCenterV1(ArrayList<ArrayList<?>> tree, ArrayList<Integer> leaves, ArrayList<Integer> vert){
 		int edges;
 		
 		//Znaleziono centrum drzewa
-		if(size <= 2){
-			center = leaves;
+		if(vert.size() <= 2){
+			center = vert;
 			return 1;
 		}
 
@@ -98,7 +105,8 @@ public class Main {
 					((ArrayList<Integer>) tree.get(leaves.get(i))).set(j, 0);
 					((ArrayList<Integer>) tree.get(j)).set(leaves.get(i), 0);
 				}
-				size--;
+				//Usuwam wierzcho³ek z listy wszystkich wierzcho³ków
+				vert.remove(Integer.valueOf(leaves.get(i)));
 			}
 		}
 		leaves.clear();
@@ -116,6 +124,6 @@ public class Main {
 			}
 		}
 		
-		return findCenterV1(tree, leaves, size) + 1;
+		return findCenterV1(tree, leaves, vert) + 1;
 	}
 }
